@@ -1,14 +1,14 @@
 // game configuration
 let config = {
-    audio: { },
     type: Phaser.CANVAS,
-    pixelArt: true,
-    width: 960,
+    width: 800,
     height: 600,
+    parent: "game-container",
+    pixelArt: true,
     physics: {
         default: "arcade",
         arcade: {
-            debug: true,
+            gravity: { y: 0 }
         }
     },
     fps: {
@@ -19,13 +19,14 @@ let config = {
 }
 
 let game = new Phaser.Game(config);
+let player;
 
 // define game settings
 game.settings = {
     gameOver: false,
     isUnstable: false,
-    playerSpeed: 10,
+    playerSpeed: 100,
 }
 
 // reserve keyboard variables
-let keyW, keyA, keyS, keyD, keySpace;
+let keyW, keyA, keyS, keyD, keyQ, keyE, keySpace;
