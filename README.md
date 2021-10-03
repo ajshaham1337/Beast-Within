@@ -14,6 +14,7 @@ to do:
     talk w/ alfy about this one: add scenes w/ daniel's image. have them popup rather than transition to new scene (how do? if hard do scenes prob) (sunday)
 
     wolf slay mechanic (e to kill when near) (sunday) - alex
+    trigger quest (e to start when near) (sunday) - alex
     make map w/ tileset (delegate to emily) (sunday)
         add conditions - alex
     
@@ -21,6 +22,6 @@ to do:
     
     quests + sytems (sunday) - alex
 
-    
+    !!!use game.settings for state manipulation w/ scene transitions. remember what you were thinking early!!!
     
     POLISH ON MONDAY

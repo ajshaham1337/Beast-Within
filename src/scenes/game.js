@@ -6,8 +6,8 @@ class Game extends Phaser.Scene {
 
     create() {
         // Reset variables
-        game.settings.gameOver = false;
-        game.settings.isUnstable = false;
+        // game.settings.gameOver = false;
+        // game.settings.isUnstable = false;
 
         // Define hotkeys
         keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -42,24 +42,22 @@ class Game extends Phaser.Scene {
         // collision shapes. In the tmx file, there's an object layer with a point named "Spawn Point"
         // const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
 
-        player = new Player(this, 400, 300, "player");
+        this.wolf = new Wolf(this, 525, 525, "wolf").setScale(0.25);
+        this.villager = new Villager(this, 525, 525, "villager").setScale(0.15);
+        this.player = new Player(this, 525, 525, "player").setScale(1.5);
+
         // this.stability = new StabilityBar(this, 784, 584); // bar doesnt show? why?
         // this.stability.setScrollFactor(0).setDepth(30);
 
         // Watch the player and worldLayer for collisions, for the duration of the scene:
-        this.physics.add.collider(player, belowLayer);
-        this.physics.add.collider(player, worldLayer); //should only be world, fix later.
-        this.physics.add.collider(player, aboveLayer);
+        this.physics.add.collider(this.player, belowLayer);
+        this.physics.add.collider(this.player, worldLayer); //should only be world, fix later.
+        this.physics.add.collider(this.player, aboveLayer);
+        this.physics.add.collider(this.player, this.wolf);
+        this.physics.add.collider(this.player, this.villager);
 
         // Camera
-        const camera = this.cameras.main
-        camera.startFollow(player);
-        camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-
-        // // Sanity Bar
-        // let stabilityBar = this.makeBar(140, 100, 0x2ecc71);
-        // this.setValue(stabilityBar, 100);
-        // dynamic bar rather than static text. needs to be anchored to player or to a point on the screen not just a location on map to work.
+        this.cameras.main.startFollow(this.player).setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
         // Help text that has a "fixed" position on the screen
         this.controls = this.add.text(16, 16, 'Movement: WASD\nInteract: E\nContinue: Q', {
@@ -84,13 +82,30 @@ class Game extends Phaser.Scene {
             .setScrollFactor(0)
             .setDepth(30)
             .setAlpha(0.75);
+
+        // Debug graphics
+        this.input.keyboard.once(keyQ.isDown, event => {
+            // Turn on physics debugging to show player's hitbox
+            this.physics.world.createDebugGraphic();
+
+            // Create worldLayer collision graphic above the player, but below the help text
+            const graphics = this.add
+                .graphics()
+                .setAlpha(0.75)
+                .setDepth(20);
+            worldLayer.renderDebug(graphics, {
+                tileColor: null, // Color of non-colliding tiles
+                collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
+                faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
+            });
+        });
     }
 
     update() {
         // const prevVelocity = player.body.velocity.clone();
 
         if (game.settings.gameOver == false) {
-            player.update();
+            this.player.update();
             // this.playerMovementAnimation(player, prevVelocity);
         }
 
@@ -103,7 +118,6 @@ class Game extends Phaser.Scene {
     }
 
     decrease(amount) {
-        console.log("does it get in here");
         this.stability -= amount;
         this.stabilityBar.text = 'Stability: ' + this.stability;
     }

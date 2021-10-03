@@ -1,6 +1,6 @@
 // Game configuration
 let config = {
-    type: Phaser.CANVAS,
+    type: Phaser.AUTO,
     width: 800,
     height: 600,
     parent: "game-container",
@@ -8,7 +8,8 @@ let config = {
     physics: {
         default: "arcade",
         arcade: {
-            gravity: { y: 0 }
+            debug: true,
+            gravity: { y: 0 },
         }
     },
     fps: {
@@ -19,14 +20,14 @@ let config = {
 }
 
 let game = new Phaser.Game(config);
-let player;
 
 // Define game settings
 game.settings = {
     gameOver: false,
     isUnstable: false,
     playerSpeed: 100,
+    // can use game.settings to finesse game states i believe.
 }
 
 // Reserve keyboard variables
-let keyW, keyA, keyS, keyD, keyQ, keyE, keySpace, keyT, keyC;
+let keyW, keyA, keyS, keyD, keyQ, keyE, keySPACE, keyT, keyC, keyESC;
