@@ -4,10 +4,6 @@
 }
 
 #game-container {
-    /* ... */
-}
-
-#game-container {
     min-width: 100vw;
     min-height: 100vh;
     display: flex;
@@ -15,7 +11,6 @@
     justify-content: center;
 }
 
-
-/* #game-container>canvas {
-    border-radius: 5px;
-} */
+#game-container>canvas {
+    border: 10px solid black;
+}

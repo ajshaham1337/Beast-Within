@@ -1,4 +1,4 @@
-// game configuration
+// Game configuration
 let config = {
     type: Phaser.CANVAS,
     width: 800,
@@ -15,18 +15,18 @@ let config = {
         target: 60,
         forceSetTimeOut: true,
     },
-    scene: [Storage, Menu, Game],
+    scene: [Storage, Menu, Credits, Game],
 }
 
 let game = new Phaser.Game(config);
 let player;
 
-// define game settings
+// Define game settings
 game.settings = {
     gameOver: false,
     isUnstable: false,
     playerSpeed: 100,
 }
 
-// reserve keyboard variables
-let keyW, keyA, keyS, keyD, keyQ, keyE, keySpace;
+// Reserve keyboard variables
+let keyW, keyA, keyS, keyD, keyQ, keyE, keySpace, keyT, keyC;
