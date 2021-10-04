@@ -9,7 +9,7 @@ let config = {
         default: "arcade",
         arcade: {
             debug: false,
-            debug: true,
+            // debug: true,
             gravity: { y: 0 },
         }
     },
@@ -25,9 +25,8 @@ let game = new Phaser.Game(config);
 
 // Define game settings
 game.settings = {
-    // isUnstable: false,
     playerSpeed: 75,
-    // can use game.settings to finesse game states i believe.
+    winCon: false,
 }
 
 // Reserve keyboard variables

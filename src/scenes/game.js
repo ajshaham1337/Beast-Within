@@ -6,8 +6,8 @@ class Game extends Phaser.Scene {
 
     create() {
         // Stability bar graphic
-        this.stability = 100;
-        this.stabilityBar = this.add.text(16, 16, 'Humanity: ' + this.stability, {
+        let stability = 100;
+        let stabilityBar = this.add.text(16, 16, 'Humanity: ' + stability, {
                 font: '24px monospace',
                 backgroundColor: '#A87D7D',
                 fill: "#000000",
@@ -20,10 +20,12 @@ class Game extends Phaser.Scene {
             .setAlpha(0.75);
 
         function wolfSlain(wolf, t) {
-            console.log("yo!");
             wolf.disableBody(true, true);
-            t.stability -= 10;
-            t.stabilityBar.setText('Humanity: ' + t.stability);
+            stability -= 10;
+            stabilityBar.text = ('Humanity: ' + stability);
+            if (stabilityBar.text == 'Humanity: 0') {
+                game.settings.winCon = true;
+            }
         }
 
         function fcnHelper(player, wolf) {
@@ -40,11 +42,8 @@ class Game extends Phaser.Scene {
         // Map
         const map = this.make.tilemap({ key: "map" });
 
-        // Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
-        // Phaser's cache (i.e. the name you used in preload)
         const tileset = map.addTilesetImage("wolf game tileset", "tiles");
 
-        // Parameters: layer name (or index) from Tiled, tileset, x, y
         const backgroundLayer = map.createLayer("Background", tileset, 0, 0);
         const belowLayer = map.createLayer("Below Player", tileset, 0, 0);
         const worldLayer = map.createLayer("World", tileset, 0, 0);
@@ -53,19 +52,25 @@ class Game extends Phaser.Scene {
         worldLayer.setCollisionByProperty({ collides: true });
         aboveLayer.setDepth(10);
 
-        // Object layers in Tiled let you embed extra info into a map - like a spawn point or custom
-        // collision shapes. In the tmx file, there's an object layer with a point named "Spawn Point"
-        // const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
-
         this.player = new Player(this, 550, 250, "player");
         this.villager1 = new Villager(this, 700, 100, "villagerMan");
         this.villager2 = new Villager(this, 525, 200, "villagerWoman");
+        this.wolf1 = new Wolf(this, 100, 200, "wolf");
+        this.wolf2 = new Wolf(this, 200, 250, "wolf");
+        this.wolf3 = new Wolf(this, 300, 350, "wolf");
+        this.wolf4 = new Wolf(this, 400, 250, "wolf");
+        this.wolf5 = new Wolf(this, 750, 500, "wolf");
+        this.wolf6 = new Wolf(this, 50, 150, "wolf");
+        this.wolf7 = new Wolf(this, 200, 250, "wolf");
+        this.wolf8 = new Wolf(this, 500, 300, "wolf");
+        this.wolf9 = new Wolf(this, 600, 500, "wolf");
+        this.wolf10 = new Wolf(this, 300, 500, "wolf");
 
-        let wolves = this.physics.add.group({
-            key: 'wolf',
-            repeat: 10,
-            setXY: { x: 12, y: 12, stepX: 50, stepY: 50 }
-        });
+        // let wolves = this.physics.add.group({
+        //     key: 'wolf',
+        //     repeat: 10,
+        //     setXY: { x: 12, y: 12, stepX: 50, stepY: 50 }
+        // });
         // Watch the player and worldLayer for collisions, for the duration of the scene:
         this.physics.add.collider(this.player, worldLayer);
 
@@ -75,44 +80,16 @@ class Game extends Phaser.Scene {
         // this.physics.add.collider(this.player, wolves);
         // this.physics.add.collider(wolves, worldLayer);
         // this.physics.add.overlap(worldLayer, wolves, fcnHelper, null, this);
-        this.physics.add.overlap(this.player, wolves, fcnHelper, null, this);
-
-        // this.wolf1 = new Wolf(this, 525, 525, "wolf");
-        // this.wolf2 = new Wolf(this, 525, 525, "wolf");
-        // this.wolf3 = new Wolf(this, 525, 525, "wolf");
-        // this.wolf4 = new Wolf(this, 525, 525, "wolf");
-        // this.wolf5 = new Wolf(this, 525, 525, "wolf");
-        // this.wolf6 = new Wolf(this, 525, 525, "wolf");
-        // this.wolf7 = new Wolf(this, 525, 525, "wolf");
-        // this.wolf8 = new Wolf(this, 525, 525, "wolf");
-        // this.wolf9 = new Wolf(this, 525, 525, "wolf");
-        // this.wolf10 = new Wolf(this, 525, 525, "wolf");
-
-        // this.player.body.onCollide = new Phaser.Signal();
-        // this.player.body.onCollide.add(hitSprite, this);
-
-        // this.physics.add.collider(this.player, this.wolf1, wolfSlain(this.wolf1, this), null, this);
-        // // this.player.body.onCollide.add(wolfSlain(this.wolf1, this));
-        // this.player.body.onCollide.add(wolfSlain(this.wolf2, this));
-        // this.player.body.onCollide.add(wolfSlain(this.wolf3, this));
-        // this.player.body.onCollide.add(wolfSlain(this.wolf4, this));
-        // this.player.body.onCollide.add(wolfSlain(this.wolf5, this));
-        // this.player.body.onCollide.add(wolfSlain(this.wolf6, this));
-        // this.player.body.onCollide.add(wolfSlain(this.wolf7, this));
-        // this.player.body.onCollide.add(wolfSlain(this.wolf8, this));
-        // this.player.body.onCollide.add(wolfSlain(this.wolf9, this));
-        // this.player.body.onCollide.add(wolfSlain(this.wolf10, this));
-
-        // this.physics.add.collider(this.player, this.wolf1);
-        // this.physics.add.collider(this.player, this.wolf2);
-        // this.physics.add.collider(this.player, this.wolf3);
-        // this.physics.add.collider(this.player, this.wolf4);
-        // this.physics.add.collider(this.player, this.wolf5);
-        // this.physics.add.collider(this.player, this.wolf6);
-        // this.physics.add.collider(this.player, this.wolf7);
-        // this.physics.add.collider(this.player, this.wolf8);
-        // this.physics.add.collider(this.player, this.wolf9);
-        // this.physics.add.collider(this.player, this.wolf10);
+        this.physics.add.overlap(this.player, this.wolf1, fcnHelper, null, this);
+        this.physics.add.overlap(this.player, this.wolf2, fcnHelper, null, this);
+        this.physics.add.overlap(this.player, this.wolf3, fcnHelper, null, this);
+        this.physics.add.overlap(this.player, this.wolf4, fcnHelper, null, this);
+        this.physics.add.overlap(this.player, this.wolf5, fcnHelper, null, this);
+        this.physics.add.overlap(this.player, this.wolf6, fcnHelper, null, this);
+        this.physics.add.overlap(this.player, this.wolf7, fcnHelper, null, this);
+        this.physics.add.overlap(this.player, this.wolf8, fcnHelper, null, this);
+        this.physics.add.overlap(this.player, this.wolf9, fcnHelper, null, this);
+        this.physics.add.overlap(this.player, this.wolf10, fcnHelper, null, this);
 
         // Camera
         this.cameras.main.startFollow(this.player).setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -120,8 +97,7 @@ class Game extends Phaser.Scene {
     }
 
     update() {
-        if (this.stability = 0) {
-            //mid+end slides and story
+        if (game.settings.winCon == true) {
             this.scene.start("text3Scene");
         }
 
@@ -130,41 +106,6 @@ class Game extends Phaser.Scene {
         }
 
         this.player.update();
-
-        // if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
-        //     this.decrease(10);
-        // }
-
-        //out of interest of time just make it on collision
-        // if (Phaser.Input.Keyboard.JustDown(keyE)) {
-        //     this.decrease(10);
-        // }
-
-        // if (this.player.body.onCollide.add(this.wolfSlain, this.wolf1)) {
-        //     wolfSlain(this.wolf1);
-        // }
-
-        // if (this.player.physics.add.onCollision(this.wolf1)) {
-        //     this.wolfSlain(this.wolf1);
-        // } else if (this.player.body.onCollide(this.wolf2)) {
-        //     this.wolfSlain(this.wolf2);
-        // } else if (this.player.body.onCollide(this.wolf3)) {
-        //     this.wolfSlain(this.wolf3);
-        // } else if (this.player.body.onCollide(this.wolf4)) {
-        //     this.wolfSlain(this.wolf4);
-        // } else if (this.player.body.onCollide(this.wolf5)) {
-        //     this.wolfSlain(this.wolf5);
-        // } else if (this.player.body.onCollide(this.wolf6)) {
-        //     this.wolfSlain(this.wolf6);
-        // } else if (this.player.body.onCollide(this.wolf7)) {
-        //     this.wolfSlain(this.wolf7);
-        // } else if (this.player.body.onCollide(this.wolf8)) {
-        //     this.wolfSlain(this.wolf8);
-        // } else if (this.player.body.onCollide(this.wolf9)) {
-        //     this.wolfSlain(this.wolf9);
-        // } else if (this.player.body.onCollide(this.wolf10)) {
-        //     this.wolfSlain(this.wolf10);
-        // }
 
         if (keyA.isDown) {
             this.player.anims.play('walkLeft', true);
@@ -179,8 +120,4 @@ class Game extends Phaser.Scene {
         }
     }
 
-
-
-
-    //maybe add a pause feature with esc menu?
 }

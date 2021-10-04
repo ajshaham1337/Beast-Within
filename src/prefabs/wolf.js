@@ -6,7 +6,7 @@ class Wolf extends Phaser.Physics.Arcade.Sprite {
         // physics conditions
         scene.physics.add.existing(this);
         this.setImmovable(true)
-        this.setDebug(true, true, 0xFF0000); // shows physics body
+            // this.setDebug(true, true, 0xFF0000); // shows physics body
 
         scene.add.existing(this);
     }

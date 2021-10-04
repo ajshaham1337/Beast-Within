@@ -5,7 +5,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Physics conditions
         scene.physics.add.existing(this);
-        this.setDebug(true, true, 0xFF0000); // shows physics body
+        // this.setDebug(true, true, 0xFF0000); // shows physics body
 
         scene.add.existing(this);
     }

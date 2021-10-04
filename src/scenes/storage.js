@@ -24,7 +24,6 @@ class Storage extends Phaser.Scene {
         // Game Map Assets: Tileset & Tilemap
         // this.load.image("tiles", "./assets/tiled/wolf game tileset.png");
         // this.load.tilemapTiledJSON("map", "./assets/tiled/wolf_game_map.json");
-
         this.load.image("tiles", "./assets/temp/wolf game tileset.png");
         this.load.tilemapTiledJSON("map", "./assets/temp/wolf_game_map.json");
 
