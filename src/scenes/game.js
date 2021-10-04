@@ -101,10 +101,6 @@ class Game extends Phaser.Scene {
             this.scene.start("text3Scene");
         }
 
-        if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
-            this.scene.start("text3Scene");
-        }
-
         this.player.update();
 
         if (keyA.isDown) {
