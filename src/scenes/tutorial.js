@@ -21,7 +21,7 @@ class Tutorial extends Phaser.Scene {
             .setOrigin(0.5);
 
 
-        this.add.text(screenCenterX, screenCenterY + 100, 'Movement: WASD\nContinue through scenes by pressing SPACE\nHunt all of the wolves by running into them', {
+        this.add.text(screenCenterX, screenCenterY + 100, 'Movement: WASD\nContinue through scenes by pressing SPACE\nHunt all of the wolves by running into them\nThe score is bugged so press SPACE after clearing all wolves', {
                 font: "18px monospace",
                 fill: "#000000",
                 padding: { x: 20, y: 10 },
