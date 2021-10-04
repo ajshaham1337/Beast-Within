@@ -1,16 +1,18 @@
-class Credits extends Phaser.Scene {
+class End extends Phaser.Scene {
 
     constructor() {
-        super("creditsScene");
+        super("endScene");
     }
 
     create() {
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
+        // this.bg = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'menu').setOrigin(0);
+
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
-        this.add.text(screenCenterX, screenCenterY - 100, 'Credits', {
+        this.add.text(screenCenterX, screenCenterY - 100, 'The End', {
                 font: "36px monospace",
                 fill: "#000000",
                 padding: { x: 40, y: 20 },
@@ -18,7 +20,7 @@ class Credits extends Phaser.Scene {
             })
             .setOrigin(0.5);
 
-        this.add.text(screenCenterX, screenCenterY + 100, 'Daniel Liao: Splash Art\n   Emily Ye: Pixel Artist\n   Alfy Lam: Debugger\nAlex Shaham: Producer/Coder', {
+        this.add.text(screenCenterX, screenCenterY + 100, 'Thanks for playing!', {
                 font: "36px monospace",
                 fill: "#000000",
                 padding: { x: 40, y: 20 },

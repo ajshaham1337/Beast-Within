@@ -14,43 +14,33 @@ class Menu extends Phaser.Scene {
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
-        // startButton = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, 'START', ) //textstyle last param { ... }
-        //     .setOrigin(0.5)
-        //     .setPadding(10)
-        //     .setStyle({ backgroundColor: '#111' })
-        //     .setInteractive({ useHandCursor: true })
-        //     .on('pointerdown', this.startGame())
-        //     .on('pointerover', () => startButton.setStyle({ fill: '#f39c12' }))
-        //     .on('pointerout', () => startButton.setStyle({ fill: '#FFF' }));
-
-        this.add.text(screenCenterX, screenCenterY - 100, 'Game Name', {
-                font: "42px monospace",
+        this.add.text(screenCenterX, screenCenterY, 'Press S to Start', {
+                font: "18px monospace",
                 fill: "#000000",
                 padding: { x: 20, y: 10 },
-                backgroundColor: "#ffffff",
+                backgroundColor: '#A87D7D',
+                fixedWidth: 250,
+                align: 'center',
+            })
+            .setOrigin(0.5);
+
+        this.add.text(screenCenterX, screenCenterY + 50, 'Press T for tutorial', {
+                font: "18px monospace",
+                fill: "#000000",
+                padding: { x: 20, y: 10 },
+                backgroundColor: '#A87D7D',
                 fixedWidth: 250,
                 align: 'center',
             })
             .setOrigin(0.5);
 
 
-        this.add.text(screenCenterX, screenCenterY, 'START', {
+        this.add.text(screenCenterX, screenCenterY + 100, 'Press C for Credits', {
                 font: "18px monospace",
                 fill: "#000000",
                 padding: { x: 20, y: 10 },
-                backgroundColor: "#ffffff",
-                fixedWidth: 125,
-                align: 'center',
-            })
-            .setOrigin(0.5);
-
-
-        this.add.text(screenCenterX, screenCenterY + 50, 'CREDITS', {
-                font: "18px monospace",
-                fill: "#000000",
-                padding: { x: 20, y: 10 },
-                backgroundColor: "#ffffff",
-                fixedWidth: 125,
+                backgroundColor: '#A87D7D',
+                fixedWidth: 250,
                 align: 'center',
             })
             .setOrigin(0.5);
@@ -58,7 +48,9 @@ class Menu extends Phaser.Scene {
 
     update() {
         if (Phaser.Input.Keyboard.JustDown(keyS)) {
-            this.scene.start("gameScene");
+            this.scene.start("text1Scene");
+        } else if (Phaser.Input.Keyboard.JustDown(keyT)) {
+            this.scene.start("tutorialScene");
         } else if (Phaser.Input.Keyboard.JustDown(keyC)) {
             this.scene.start("creditsScene");
         }

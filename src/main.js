@@ -16,16 +16,16 @@ let config = {
         target: 60,
         forceSetTimeOut: true,
     },
-    scene: [Storage, Menu, Credits, Game],
+    scene: [Storage, Menu, Tutorial, Credits, Text1, Story1, Text2, Story2, Game, Text3, Story3, Text4, Story4, End],
+
 }
 
 let game = new Phaser.Game(config);
 
 // Define game settings
 game.settings = {
-    gameOver: false,
-    isUnstable: false,
-    playerSpeed: 100,
+    // isUnstable: false,
+    playerSpeed: 75,
     // can use game.settings to finesse game states i believe.
 }
 

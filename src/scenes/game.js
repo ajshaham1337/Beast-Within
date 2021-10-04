@@ -5,73 +5,9 @@ class Game extends Phaser.Scene {
     }
 
     create() {
-        // Reset variables
-        // game.settings.gameOver = false;
-        // game.settings.isUnstable = false;
-
-        // Define hotkeys
-        keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
-        keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-
-        // Map
-        const map = this.make.tilemap({ key: "map" });
-
-        // Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
-        // Phaser's cache (i.e. the name you used in preload)
-        const tileset = map.addTilesetImage("wolf_game_map_tileset", "tiles");
-
-        // Parameters: layer name (or index) from Tiled, tileset, x, y
-        const belowLayer = map.createLayer("Below Player", tileset, 0, 0);
-        const worldLayer = map.createLayer("World", tileset, 0, 0);
-        const aboveLayer = map.createLayer("Above Player", tileset, 0, 0);
-
-        belowLayer.setCollisionByProperty({ collides: true });
-        worldLayer.setCollisionByProperty({ collides: true });
-        aboveLayer.setCollisionByProperty({ collides: true });
-
-        // By default, everything gets depth sorted on the screen in the order we created things. Here, we
-        // want the "Above Player" layer to sit on top of the player, so we explicitly give it a depth.
-        // Higher depths will sit on top of lower depth objects.
-        aboveLayer.setDepth(10);
-
-        // Object layers in Tiled let you embed extra info into a map - like a spawn point or custom
-        // collision shapes. In the tmx file, there's an object layer with a point named "Spawn Point"
-        // const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
-
-        this.wolf = new Wolf(this, 525, 525, "wolf").setScale(0.25);
-        this.villager = new Villager(this, 525, 525, "villager").setScale(0.15);
-        this.player = new Player(this, 525, 525, "player").setScale(1.5);
-
-        // this.stability = new StabilityBar(this, 784, 584); // bar doesnt show? why?
-        // this.stability.setScrollFactor(0).setDepth(30);
-
-        // Watch the player and worldLayer for collisions, for the duration of the scene:
-        this.physics.add.collider(this.player, belowLayer);
-        this.physics.add.collider(this.player, worldLayer); //should only be world, fix later.
-        this.physics.add.collider(this.player, aboveLayer);
-        this.physics.add.collider(this.player, this.wolf);
-        this.physics.add.collider(this.player, this.villager);
-
-        // Camera
-        this.cameras.main.startFollow(this.player).setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-
-        // Help text that has a "fixed" position on the screen
-        this.controls = this.add.text(16, 16, 'Movement: WASD\nInteract: E\nContinue: Q', {
-                font: "16px monospace",
-                fill: "#000000",
-                padding: { x: 20, y: 10 },
-                backgroundColor: "#A87D7D"
-            })
-            .setScrollFactor(0)
-            .setDepth(30)
-            .setAlpha(0.75);
-
+        // Stability bar graphic
         this.stability = 100;
-        this.stabilityBar = this.add.text(560, 16, 'Stability: ' + this.stability, {
+        this.stabilityBar = this.add.text(16, 16, 'Humanity: ' + this.stability, {
                 font: '24px monospace',
                 backgroundColor: '#A87D7D',
                 fill: "#000000",
@@ -83,63 +19,168 @@ class Game extends Phaser.Scene {
             .setDepth(30)
             .setAlpha(0.75);
 
-        // Debug graphics
-        this.input.keyboard.once(keyQ.isDown, event => {
-            // Turn on physics debugging to show player's hitbox
-            this.physics.world.createDebugGraphic();
+        function wolfSlain(wolf, t) {
+            console.log("yo!");
+            wolf.disableBody(true, true);
+            t.stability -= 10;
+            t.stabilityBar.setText('Humanity: ' + t.stability);
+        }
 
-            // Create worldLayer collision graphic above the player, but below the help text
-            const graphics = this.add
-                .graphics()
-                .setAlpha(0.75)
-                .setDepth(20);
-            worldLayer.renderDebug(graphics, {
-                tileColor: null, // Color of non-colliding tiles
-                collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
-                faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
-            });
+        function fcnHelper(player, wolf) {
+            wolfSlain(wolf, this);
+        }
+
+        // Define hotkeys
+        keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+        // Map
+        const map = this.make.tilemap({ key: "map" });
+
+        // Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
+        // Phaser's cache (i.e. the name you used in preload)
+        const tileset = map.addTilesetImage("wolf game tileset", "tiles");
+
+        // Parameters: layer name (or index) from Tiled, tileset, x, y
+        const backgroundLayer = map.createLayer("Background", tileset, 0, 0);
+        const belowLayer = map.createLayer("Below Player", tileset, 0, 0);
+        const worldLayer = map.createLayer("World", tileset, 0, 0);
+        const aboveLayer = map.createLayer("Above Player", tileset, 0, 0);
+
+        worldLayer.setCollisionByProperty({ collides: true });
+        aboveLayer.setDepth(10);
+
+        // Object layers in Tiled let you embed extra info into a map - like a spawn point or custom
+        // collision shapes. In the tmx file, there's an object layer with a point named "Spawn Point"
+        // const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
+
+        this.player = new Player(this, 550, 250, "player");
+        this.villager1 = new Villager(this, 700, 100, "villagerMan");
+        this.villager2 = new Villager(this, 525, 200, "villagerWoman");
+
+        let wolves = this.physics.add.group({
+            key: 'wolf',
+            repeat: 10,
+            setXY: { x: 12, y: 12, stepX: 50, stepY: 50 }
         });
+        // Watch the player and worldLayer for collisions, for the duration of the scene:
+        this.physics.add.collider(this.player, worldLayer);
+
+        this.physics.add.collider(this.player, this.villager1);
+        this.physics.add.collider(this.player, this.villager2);
+
+        // this.physics.add.collider(this.player, wolves);
+        // this.physics.add.collider(wolves, worldLayer);
+        // this.physics.add.overlap(worldLayer, wolves, fcnHelper, null, this);
+        this.physics.add.overlap(this.player, wolves, fcnHelper, null, this);
+
+        // this.wolf1 = new Wolf(this, 525, 525, "wolf");
+        // this.wolf2 = new Wolf(this, 525, 525, "wolf");
+        // this.wolf3 = new Wolf(this, 525, 525, "wolf");
+        // this.wolf4 = new Wolf(this, 525, 525, "wolf");
+        // this.wolf5 = new Wolf(this, 525, 525, "wolf");
+        // this.wolf6 = new Wolf(this, 525, 525, "wolf");
+        // this.wolf7 = new Wolf(this, 525, 525, "wolf");
+        // this.wolf8 = new Wolf(this, 525, 525, "wolf");
+        // this.wolf9 = new Wolf(this, 525, 525, "wolf");
+        // this.wolf10 = new Wolf(this, 525, 525, "wolf");
+
+        // this.player.body.onCollide = new Phaser.Signal();
+        // this.player.body.onCollide.add(hitSprite, this);
+
+        // this.physics.add.collider(this.player, this.wolf1, wolfSlain(this.wolf1, this), null, this);
+        // // this.player.body.onCollide.add(wolfSlain(this.wolf1, this));
+        // this.player.body.onCollide.add(wolfSlain(this.wolf2, this));
+        // this.player.body.onCollide.add(wolfSlain(this.wolf3, this));
+        // this.player.body.onCollide.add(wolfSlain(this.wolf4, this));
+        // this.player.body.onCollide.add(wolfSlain(this.wolf5, this));
+        // this.player.body.onCollide.add(wolfSlain(this.wolf6, this));
+        // this.player.body.onCollide.add(wolfSlain(this.wolf7, this));
+        // this.player.body.onCollide.add(wolfSlain(this.wolf8, this));
+        // this.player.body.onCollide.add(wolfSlain(this.wolf9, this));
+        // this.player.body.onCollide.add(wolfSlain(this.wolf10, this));
+
+        // this.physics.add.collider(this.player, this.wolf1);
+        // this.physics.add.collider(this.player, this.wolf2);
+        // this.physics.add.collider(this.player, this.wolf3);
+        // this.physics.add.collider(this.player, this.wolf4);
+        // this.physics.add.collider(this.player, this.wolf5);
+        // this.physics.add.collider(this.player, this.wolf6);
+        // this.physics.add.collider(this.player, this.wolf7);
+        // this.physics.add.collider(this.player, this.wolf8);
+        // this.physics.add.collider(this.player, this.wolf9);
+        // this.physics.add.collider(this.player, this.wolf10);
+
+        // Camera
+        this.cameras.main.startFollow(this.player).setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
     }
 
     update() {
-        // const prevVelocity = player.body.velocity.clone();
-
-        if (game.settings.gameOver == false) {
-            this.player.update();
-            // this.playerMovementAnimation(player, prevVelocity);
+        if (this.stability = 0) {
+            //mid+end slides and story
+            this.scene.start("text3Scene");
         }
 
-        if (Phaser.Input.Keyboard.JustDown(keyE)) {
-            this.decrease(5);
+        if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
+            this.scene.start("text3Scene");
         }
 
-        // have a hud toggle for player controls, (H key) and move it to bottom left.
-        // and put a quest box up top left in its spot.
+        this.player.update();
+
+        // if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
+        //     this.decrease(10);
+        // }
+
+        //out of interest of time just make it on collision
+        // if (Phaser.Input.Keyboard.JustDown(keyE)) {
+        //     this.decrease(10);
+        // }
+
+        // if (this.player.body.onCollide.add(this.wolfSlain, this.wolf1)) {
+        //     wolfSlain(this.wolf1);
+        // }
+
+        // if (this.player.physics.add.onCollision(this.wolf1)) {
+        //     this.wolfSlain(this.wolf1);
+        // } else if (this.player.body.onCollide(this.wolf2)) {
+        //     this.wolfSlain(this.wolf2);
+        // } else if (this.player.body.onCollide(this.wolf3)) {
+        //     this.wolfSlain(this.wolf3);
+        // } else if (this.player.body.onCollide(this.wolf4)) {
+        //     this.wolfSlain(this.wolf4);
+        // } else if (this.player.body.onCollide(this.wolf5)) {
+        //     this.wolfSlain(this.wolf5);
+        // } else if (this.player.body.onCollide(this.wolf6)) {
+        //     this.wolfSlain(this.wolf6);
+        // } else if (this.player.body.onCollide(this.wolf7)) {
+        //     this.wolfSlain(this.wolf7);
+        // } else if (this.player.body.onCollide(this.wolf8)) {
+        //     this.wolfSlain(this.wolf8);
+        // } else if (this.player.body.onCollide(this.wolf9)) {
+        //     this.wolfSlain(this.wolf9);
+        // } else if (this.player.body.onCollide(this.wolf10)) {
+        //     this.wolfSlain(this.wolf10);
+        // }
+
+        if (keyA.isDown) {
+            this.player.anims.play('walkLeft', true);
+        } else if (keyD.isDown) {
+            this.player.anims.play('walkRight', true);
+        } else if (keyW.isDown) {
+            this.player.anims.play('walkUp', true);
+        } else if (keyS.isDown) {
+            this.player.anims.play('walkDown', true);
+        } else {
+            this.player.anims.stop();
+        }
     }
 
-    decrease(amount) {
-        this.stability -= amount;
-        this.stabilityBar.text = 'Stability: ' + this.stability;
-    }
 
-    // playerMovementAnimation(player, prevVelocity) {
-    //     // Update the animation last and give left/right animations precedence over up/down animations
-    //     if (keyA.isDown) {
-    //         player.anims.play("misa-left-walk", true);
-    //     } else if (keyD.isDown) {
-    //         player.anims.play("misa-right-walk", true);
-    //     } else if (keyW.isDown) {
-    //         player.anims.play("misa-back-walk", true);
-    //     } else if (keyS.isDown) {
-    //         player.anims.play("misa-front-walk", true);
-    //     } else {
-    //         player.anims.stop();
 
-    //         // If we were moving, pick and idle frame to use
-    //         if (prevVelocity.x < 0) player.setTexture("atlas", "misa-left");
-    //         else if (prevVelocity.x > 0) player.setTexture("atlas", "misa-right");
-    //         else if (prevVelocity.y < 0) player.setTexture("atlas", "misa-back");
-    //         else if (prevVelocity.y > 0) player.setTexture("atlas", "misa-front");
-    //     }
-    // }
+
+    //maybe add a pause feature with esc menu?
 }
