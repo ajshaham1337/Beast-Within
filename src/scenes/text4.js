@@ -10,7 +10,7 @@ class Text4 extends Phaser.Scene {
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
-        this.add.text(screenCenterX, screenCenterY + 100, "The villagers fearing what you've become chased you out.\nFor you became something that people would never forget for generations.", {
+        this.add.text(screenCenterX, screenCenterY + 100, "The villagers fearing what you've become chased you out.\nFor you became something that people would not forget for generations.", {
                 font: "18px monospace",
                 fill: "#000000",
                 padding: { x: 20, y: 10 },

@@ -66,12 +66,6 @@ class Game extends Phaser.Scene {
         this.wolf9 = new Wolf(this, 600, 500, "wolf");
         this.wolf10 = new Wolf(this, 300, 500, "wolf");
 
-        // let wolves = this.physics.add.group({
-        //     key: 'wolf',
-        //     repeat: 10,
-        //     setXY: { x: 12, y: 12, stepX: 50, stepY: 50 }
-        // });
-        // Watch the player and worldLayer for collisions, for the duration of the scene:
         this.physics.add.collider(this.player, worldLayer);
 
         this.physics.add.collider(this.player, this.villager1);
@@ -93,7 +87,6 @@ class Game extends Phaser.Scene {
 
         // Camera
         this.cameras.main.startFollow(this.player).setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-
     }
 
     update() {
@@ -115,5 +108,4 @@ class Game extends Phaser.Scene {
             this.player.anims.stop();
         }
     }
-
 }
